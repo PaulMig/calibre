@@ -27,7 +27,7 @@ RUN apt-get update -y &&\
     Group=docker\n\
     ExecStart=/opt/calibre/calibre-server /calibre-library --enable-local-write --enable-auth\n\
     [Install]\n\
-    WantedBy=multi-user.target\n\
+    WantedBy=multi-user.target\'n\
     >> /etc/systemd/system/calibre-server.service
     # sudo systemctl enable calibre-server && \
     # calibre-server --manage-users --username paul --password password && \
