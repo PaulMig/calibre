@@ -34,4 +34,4 @@ RUN apt-get update -y &&\
     # calibre-server --manage-users --username paul --password password && \
     echo 'ExecStart=/opt/calibre/calibre-server /home/docker/calibre-library --enable-local-write --enable-auth\n'\ 
     >> /etc/systemd/system/calibre-server.service
-    # sudo systemctl daemon-reload
+    sudo systemctl start calibre-server
