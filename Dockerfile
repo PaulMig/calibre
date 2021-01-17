@@ -38,19 +38,18 @@ RUN sudo apt-get install -y apt-utils && \
     wget http://www.gutenberg.org/ebooks/46.kindle.noimages -O christmascarol.mobi && \    
     calibredb add *.mobi --with-library calibre-library/ && \
     touch /etc/systemd/system/calibre-server.service && \
-    cat >/etc/systemd/system/calibre-server.service <<'EOL'
-    ## startup service
-    [Unit]
-    Description=calibre content server
-    After=network.target
-    [Service]
-    Type=simple
-    User=docker
-    Group=docker
-    ExecStart=/opt/calibre/calibre-server /home/docker/calibre-library --enable-local-write --enable-auth
-    [Install]
-    WantedBy=multi-user.target
-    EOL && \
+    echo '## startup service\n\
+    [Unit]\n\
+    Description=calibre content server\n\
+    After=network.target\n\
+    [Service]\n\
+    Type=simple\n\
+    User=docker\n\
+    Group=docker\n\
+    ExecStart=/opt/calibre/calibre-server /home/docker/calibre-library --enable-local-write --enable-auth\n\
+    [Install]\n\
+    WantedBy=multi-user.target\n\
+    >> /etc/systemd/system/calibre-server.service && \
     sudo systemctl enable calibre-server
 
 VOLUME [ "/sys/fs/cgroup" ]
