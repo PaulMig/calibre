@@ -1,4 +1,4 @@
-FROM ubuntu:20.04
+FROM debian:buster
 ENV container docker
 ENV LC_ALL C
 ENV DEBIAN_FRONTEND noninteractive
@@ -6,10 +6,11 @@ ENV DEBIAN_FRONTEND noninteractive
 RUN sed -i 's/# deb/deb/g' /etc/apt/sources.list
 
 RUN apt-get update &&\
+    apt-get -y upgrade && \
     apt-get install -y sudo && \
-    apt-get install -y systemd systemd-sysv && \
-    apt-get clean && \
-    rm -rf /var/lib/apt/lists/* /tmp/* /var/tmp/*
+    sudo apt-get install -y systemd systemd-sysv && \
+    sudo apt-get clean && \
+    sudo rm -rf /var/lib/apt/lists/* /tmp/* /var/tmp/*
 
 RUN cd /lib/systemd/system/sysinit.target.wants/ && \
     ls | grep -v systemd-tmpfiles-setup | xargs rm -f $1
@@ -24,11 +25,7 @@ RUN rm -f /lib/systemd/system/multi-user.target.wants/* \
     /lib/systemd/system/plymouth* \
     /lib/systemd/system/systemd-update-utmp*
 
-RUN apt-get update -y &&\
-    apt-get install -y sudo && \
-    sudo apt-get -y upgrade && \
-    sudo apt-get install -y apt-utils && \
-    sudo apt-get install -y systemd systemd-sysv && \
+RUN sudo apt-get install -y apt-utils && \
     sudo apt-get install -y libfontconfig libgl1-mesa-glx && \
     sudo apt-get install -y wget && \
     sudo apt-get install -y python && \
@@ -41,21 +38,20 @@ RUN apt-get update -y &&\
     wget http://www.gutenberg.org/ebooks/46.kindle.noimages -O christmascarol.mobi && \    
     calibredb add *.mobi --with-library calibre-library/ && \
     touch /etc/systemd/system/calibre-server.service && \
-    echo '## startup service\n\
-    [Unit]\n\
-    Description=calibre content server\n\
-    After=network.target\n\
-    [Service]\n\
-    Type=simple\n\
-    User=docker\n\
-    Group=docker\n\
-    ExecStart=/opt/calibre/calibre-server /home/docker/calibre-library --enable-local-write --enable-auth\n\
-    [Install]\n\
-    WantedBy=multi-user.target\n'\
-    >> /etc/systemd/system/calibre-server.service && \
+    cat >/etc/systemd/system/calibre-server.service <<'EOL'
+    ## startup service
+    [Unit]
+    Description=calibre content server
+    After=network.target
+    [Service]
+    Type=simple
+    User=docker
+    Group=docker
+    ExecStart=/opt/calibre/calibre-server /home/docker/calibre-library --enable-local-write --enable-auth
+    [Install]
+    WantedBy=multi-user.target
+    EOL && \
     sudo systemctl enable calibre-server
-    # calibre-server --manage-users --username paul --password password
-    # sudo systemctl daemon-reload
 
 VOLUME [ "/sys/fs/cgroup" ]
 
