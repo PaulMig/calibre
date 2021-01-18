@@ -2,10 +2,10 @@ FROM jrei/systemd-debian
 
 run apt update && \
     apt upgrade && \
-    apt install wget && \
-    apt install python && \
-    apt install nano && \
-    apt install sudo && \
+    apt install -y wget && \
+    apt install -y python && \
+    apt install -y nano && \
+    apt install -y sudo && \
     sudo apt install -y libfontconfig libgl1-mesa-glx && \
     wget https://download.calibre-ebook.com/linux-installer.sh && \
     sudo sh linux-installer.sh && \
