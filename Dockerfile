@@ -1,7 +1,7 @@
 FROM jrei/systemd-debian
 
-run apt update && \
-    apt upgrade && \
+run apt update -y && \
+    apt upgrade -y && \
     apt install -y wget && \
     apt install -y python && \
     apt install -y nano && \
