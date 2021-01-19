@@ -49,7 +49,7 @@ RUN apt-get update && \
     Type=simple\n\
     User=docker\n\
     Group=docker\n\
-    ExecStart=/opt/calibre/calibre-server /home/docker/calibre-library --enable-local-write\n\
+    ExecStart=/opt/calibre/calibre-server /calibre-library --enable-local-write\n\
     [Install]\n\
     WantedBy=multi-user.target\n'\
     >> /etc/systemd/system/calibre-server.service
