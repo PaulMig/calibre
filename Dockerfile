@@ -28,5 +28,5 @@ run apt update -y && \
     [Install]\n\
     WantedBy=multi-user.target\n'\
     >> /etc/systemd/system/calibre-server.service && \
-    sudo systemctl enable calibre-server && \
-    sudo systemctl start calibre-server
+    sudo systemctl enable calibre-server
+    # sudo systemctl start calibre-server
