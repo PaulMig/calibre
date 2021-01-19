@@ -14,7 +14,7 @@ run apt update -y && \
     wget http://www.gutenberg.org/ebooks/46.kindle.noimages -O christmascarol.mobi && \
     mkdir calibre-library && \
     calibredb add *.mobi --with-library calibre-library/ && \
-    calibre-server calibre-library && \
+    # calibre-server calibre-library && \
     touch /etc/systemd/system/calibre-server.service && \
     echo '## startup service\n\
     [Unit]\n\
