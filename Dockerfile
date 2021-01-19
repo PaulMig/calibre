@@ -1,12 +1,37 @@
-FROM jrei/systemd-debian
+FROM ubuntu:20.04
 
-run apt update -y && \
-    apt upgrade -y && \
-    apt install -y wget && \
-    apt install -y python && \
-    apt install -y nano && \
-    apt install -y sudo && \
-    sudo apt install -y libfontconfig libgl1-mesa-glx && \
+ENV container docker
+ENV LC_ALL C
+ENV DEBIAN_FRONTEND noninteractive
+EXPOSE 8080/tcp 8081/tcp
+
+RUN sed -i 's/# deb/deb/g' /etc/apt/sources.list
+
+RUN apt-get update && \
+    apt-get install -y systemd systemd-sysv && \
+    apt-get clean && \
+    rm -rf /var/lib/apt/lists/* /tmp/* /var/tmp/*
+
+RUN cd /lib/systemd/system/sysinit.target.wants/ && \
+    ls | grep -v systemd-tmpfiles-setup | xargs rm -f $1
+
+RUN rm -f /lib/systemd/system/multi-user.target.wants/* \
+    /etc/systemd/system/*.wants/* \
+    /lib/systemd/system/local-fs.target.wants/* \
+    /lib/systemd/system/sockets.target.wants/*udev* \
+    /lib/systemd/system/sockets.target.wants/*initctl* \
+    /lib/systemd/system/basic.target.wants/* \
+    /lib/systemd/system/anaconda.target.wants/* \
+    /lib/systemd/system/plymouth* \
+    /lib/systemd/system/systemd-update-utmp*
+
+RUN apt-get update && \
+    apt-get upgrade -y && \
+    apt-get install -y wget && \
+    apt-get install -y python && \
+    apt-get install -y nano && \
+    apt-get install -y sudo && \
+    sudo apt-get install -y libfontconfig libgl1-mesa-glx && \
     wget https://download.calibre-ebook.com/linux-installer.sh && \
     sudo sh linux-installer.sh && \
     useradd -m docker && echo "docker:docker" | chpasswd && adduser docker sudo && \
@@ -27,7 +52,8 @@ run apt update -y && \
     ExecStart=/opt/calibre/calibre-server /home/docker/calibre-library --enable-local-write\n\
     [Install]\n\
     WantedBy=multi-user.target\n'\
-    >> /etc/systemd/system/calibre-server.service && \
-    sudo systemctl enable calibre-server
-    # sudo systemctl start calibre-server
-EXPOSE 8080 8081
+    >> /etc/systemd/system/calibre-server.service
+
+VOLUME [ "/sys/fs/cgroup" ]
+
+CMD ["/lib/systemd/systemd"]
