@@ -30,3 +30,4 @@ run apt update -y && \
     >> /etc/systemd/system/calibre-server.service && \
     sudo systemctl enable calibre-server
     # sudo systemctl start calibre-server
+EXPOSE 8080 8081
