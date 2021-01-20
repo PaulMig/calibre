@@ -34,8 +34,8 @@ RUN apt-get update && \
     sudo apt-get install -y libfontconfig libgl1-mesa-glx && \
     wget https://download.calibre-ebook.com/linux-installer.sh && \
     sudo sh linux-installer.sh && \
-    useradd -m dockeruser && echo "dockeruser:docker" | chpasswd && adduser dockeruser sudo && \
-    sudo chown dockeruser:docker ~/.config/ && \
+    sudo useradd -m dockeruser && echo "dockeruser:dockeruser" | chpasswd && adduser dockeruser sudo && \
+    sudo chown dockeruser:dockeruser ~/.config/ && \
     wget http://www.gutenberg.org/ebooks/46.kindle.noimages -O christmascarol.mobi && \
     mkdir calibre-library && \
     calibredb add *.mobi --with-library calibre-library/ && \
